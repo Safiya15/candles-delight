@@ -22,7 +22,9 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      align-items: flex-start;   /* change from: center */
+      padding: 60px 16px 24px;   /* add this */
     }
 
     .bg-glow {
@@ -56,6 +58,7 @@
     .back-link:hover { opacity: 1; }
 
     .card {
+      margin: auto;
       position: relative;
       background: var(--glass);
       border: 1px solid rgba(255, 255, 255, 0.25);
@@ -242,10 +245,24 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    @media (max-width: 480px) {
-      .card { padding: 1.5rem 1rem; border-radius: 16px; }
-      h2    { font-size: 1.6rem; }
-    }
+    @media (max-width: 430px) {
+  .card { padding: 1.4rem 1.1rem; border-radius: 16px; }
+  h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+  input { padding: 0.68rem 0.8rem; margin-top: 0.45rem; font-size: 0.92rem; }
+  .card button[type="submit"] { padding: 0.72rem; font-size: 0.92rem; margin-top: 0.8rem; }
+  .divider { margin: 0.9rem 0; }
+  .auth-btn { padding: 8px 12px; font-size: 0.85rem; }
+  .auth-buttons { gap: 0.5rem; }
+}
+
+@media (max-width: 360px) {
+  body { padding: 46px 10px 16px; }
+  .card { padding: 1.2rem 0.9rem; }
+  h2 { font-size: 1.35rem; }
+  input { padding: 0.6rem 0.75rem; font-size: 0.88rem; margin-top: 0.4rem; }
+  .card button[type="submit"] { padding: 0.65rem; font-size: 0.88rem; }
+  .auth-btn { font-size: 0.8rem; padding: 7px 10px; }
+}
   </style>
 </head>
 <body>
