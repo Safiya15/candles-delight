@@ -540,6 +540,13 @@
     const DEMO_UPI_ID   = 'govindbhadoriya668@okaxis';
     const DEMO_MERCHANT = 'Govind Singh Bhadoriya';
     const WHATSAPP_NO   = '919691207673';
+
+    
+
+
+const DEMO_UPI_ID_2   = 'safiyamunshi009@oksbi';        // second UPI ID
+const DEMO_MERCHANT_2 = 'Safiya Munshi'; // second name
+const WHATSAPP_NO_2   = '917987748421';       // second number
     /* ────────────────────────────────────────────────────────── */
 
     /* readCart() reads directly from localStorage — always works regardless of script load order */
@@ -681,12 +688,13 @@
           + `\n\n💰 *Total: ₹${total.toFixed(2)}*\n✅ *Payment: UPI*`;
 
         data = {
-          orderId,
-          amount: total,
-          upiUri,
-          whatsappLink: `https://wa.me/${user.phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,
-          ownerWhatsappLink: `https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(ownerMsg)}`
-        };
+  orderId,
+  amount: total,
+  upiUri,
+  whatsappLink: `https://wa.me/${user.phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,
+  ownerWhatsappLink:  `https://wa.me/${WHATSAPP_NO}?text=${encodeURIComponent(ownerMsg)}`,
+  ownerWhatsappLink2: `https://wa.me/${WHATSAPP_NO_2}?text=${encodeURIComponent(ownerMsg)}` 
+};
         showToast('Demo mode — showing offline payment flow', '');
       }
 
@@ -748,17 +756,55 @@
     }
 
     function orderDone() {
-      if (currentOrder) {
-        sessionStorage.setItem('lastOrderId', currentOrder.orderId);
-        sessionStorage.setItem('lastAmount',  currentOrder.amount);
-        // Auto-open WhatsApp to notify owner
-        if (currentOrder.ownerWhatsappLink) {
-          window.open(currentOrder.ownerWhatsappLink, '_blank');
-        }
-      }
-      localStorage.removeItem('cart');
-      window.location.href = 'order.html';
-    }
+  if (currentOrder) {
+    sessionStorage.setItem('lastOrderId', currentOrder.orderId);
+    sessionStorage.setItem('lastAmount',  currentOrder.amount);
+  }
+  localStorage.removeItem('cart');
+  document.getElementById('paymentModal').classList.remove('open');
+
+  // Build overlay
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(46,28,18,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:1rem;';
+
+  const box = document.createElement('div');
+  box.style.cssText = 'background:white;border-radius:20px;max-width:360px;width:100%;padding:2rem;text-align:center;box-shadow:0 30px 80px rgba(46,28,18,0.25);';
+
+  box.innerHTML = `
+    <div style="font-size:2rem;margin-bottom:0.5rem;">✅</div>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:#2d1f18;margin-bottom:0.4rem;">Order Confirmed!</h3>
+    <p style="font-size:0.82rem;color:#a08070;margin-bottom:1.5rem;">Please send your order details to both of us on WhatsApp</p>
+  `;
+
+  // Button 1 — owner 1
+ 
+const btn1 = document.createElement('a');
+btn1.href = currentOrder.ownerWhatsappLink;
+btn1.target = '_blank';
+btn1.rel = 'noopener noreferrer';
+btn1.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:0.85rem;background:#25D366;color:white;border-radius:12px;text-decoration:none;font-weight:600;font-size:0.9rem;margin-bottom:0.75rem;';
+btn1.innerHTML = `<i class="fab fa-whatsapp"></i> Send to ${DEMO_MERCHANT}`;
+
+// Button 2 — owner 2
+const btn2 = document.createElement('a');
+btn2.href = currentOrder.ownerWhatsappLink2;
+btn2.target = '_blank';
+btn2.rel = 'noopener noreferrer';
+btn2.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:0.85rem;background:#25D366;color:white;border-radius:12px;text-decoration:none;font-weight:600;font-size:0.9rem;margin-bottom:1.2rem;';
+btn2.innerHTML = `<i class="fab fa-whatsapp"></i> Send to ${DEMO_MERCHANT_2}`;
+
+  // Done button
+  const btnDone = document.createElement('button');
+  btnDone.style.cssText = 'width:100%;padding:0.85rem;border:1.5px solid rgba(107,76,59,0.2);border-radius:12px;background:#fdf6ee;color:#6b4c3b;font-size:0.9rem;font-weight:600;cursor:pointer;';
+  btnDone.textContent = 'Done →';
+  btnDone.addEventListener('click', () => window.location.href = 'order.html');
+
+  box.appendChild(btn1);
+  box.appendChild(btn2);
+  box.appendChild(btnDone);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+}
 
     /* ── Toast ── */
     let toastTimer;
